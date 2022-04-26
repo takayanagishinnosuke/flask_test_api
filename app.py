@@ -17,7 +17,7 @@ CORS(app)
 @app.route('/', methods=["GET"])
 def test():
     function()
-    return jsonify({'key': keyval})
+    return keyval
 
 if __name__ == "__main__":
     app.run(debug=True)
