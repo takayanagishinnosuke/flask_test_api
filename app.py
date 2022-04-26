@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 import random
-
+from flask_cors import CORS
 from requests import request
 
 keyval = 0
@@ -12,6 +12,7 @@ def function():
 
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/', methods=["GET"])
 def test():
@@ -20,4 +21,3 @@ def test():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    
