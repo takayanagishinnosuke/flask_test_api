@@ -1,14 +1,16 @@
+#%%
 from flask import Flask, jsonify
 import random
 from flask_cors import CORS
 from requests import request
 
-keyval = 0
+keyl = ['OK', 'NG']
 
 
 def function():
   global keyval
-  keyval = random.randint(0,1)
+  keyval = random.choice(keyl)
+
 
 
 app = Flask(__name__)
@@ -17,7 +19,8 @@ CORS(app)
 @app.route('/', methods=["GET"])
 def test():
     function()
-    return keyval
+    key = keyval
+    return key
 
 if __name__ == "__main__":
     app.run(debug=True)
