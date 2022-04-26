@@ -1,4 +1,3 @@
-#%%
 from flask import Flask, jsonify
 import random
 from flask_cors import CORS
