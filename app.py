@@ -7,7 +7,7 @@ from io import BytesIO
 from flask_cors import CORS
 import numpy as np
 import cv2
-import face_recognition
+import face_recognition 
 
 img_gray =[] #np配列入れるリストを用意
 

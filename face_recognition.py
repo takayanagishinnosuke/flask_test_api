@@ -6,7 +6,7 @@ import app
 
 ##-判定関数--##
 def recognition(post):
-    key = ''
+    key = '' 
 
     ##--カスケードファイルの指定--##
     cascadePath = "haarcascade_frontalface_default.xml"
