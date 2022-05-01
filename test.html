@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test</title>
+</head>
+<body>
+
+  <!-- canvasの配置 -->
+<canvas id="myCanvas" width="900" height="500"></canvas><br>
+
+<!-- fileをpostするボタンたち -->
+<form action="" method="post">
+  <input type="file" id="fileSelct"></input>
+  <button class="button" id="btn">クリア</button>
+</form>
+  
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+<!-- 以下JSファイル -->
+<script>
+
+// テストコード
+// 変数宣言
+    let clr = document.getElementById('btn'); //クリアbtnの取得
+    let myCanvas = document.getElementById('myCanvas'); //canvasの取得
+    const ctx = myCanvas.getContext('2d'); //canvasの初期設定
+    let selfile = document.getElementById('fileSelct'); //input fileの取得
+    let body ={} // json body //いるかわからないけど一応配置
+
+//canvasの定義
+    ctx.fillStyle = "#ccc";  
+    ctx.rect(0, 0, myCanvas.width, myCanvas.height);
+    ctx.fill();
+
+    ctx.fillStyle = "blue";
+    ctx.font = "35px serif";
+    ctx.fillText('Base64テスト', 30 ,60);
+
+  //ファイル選択ボタンのイベント
+    selfile.addEventListener('change', function(e){
+      let file = e.target.files;
+      let reader = new FileReader();
+
+      reader.readAsDataURL(file[0]); //ファイルをURLに
+
+      reader.onload = function(){ //ファイルが読み込めたら
+        let dataUrl = reader.result;
+        let img = new Image();
+        img.src = dataUrl; // imgのsrcをURLへ置換
+
+        img.onload = function(){ //画像が読み込めたら
+          ctx.drawImage(img, 0, 0) //canvasに挿入
+          // console.log(img)
+          let base = myCanvas.toDataURL('image/png').split(",")[1];
+          // console.log(base)
+          uploadCanvasImage(base)
+        }
+      }
+    }, false)
+
+
+    // canvasに入っているものをbase64にエンコードして読みやすい形に
+      function uploadCanvasImage(base64){
+        base64 = myCanvas.toDataURL('image/png').split(",")[1];
+        //jsonのBody
+        body = {
+          "img": base64
+        }
+        //ajaxの記法
+        return $.ajax({
+            type: "POST", //Postで
+            url: "https://shicortytestapi.herokuapp.com/", //本番時にはURL変更
+            // url: "http://127.0.0.1:5000/",
+            data: JSON.stringify(body), //json.stringfyで
+            dataType: 'json', //dataType
+            contentType: 'application/json; charset=utf-8', //contentType
+            async: false, //結果が帰ってくるまで待つ
+            cache: false //cacheをクリア
+        }).done(function(result){ //処理が正常に終了したとき
+          console.log(result)
+        }).fail(function(result){ //処理が中断したとき
+          console.log(result)
+        })
+      }
+    
+    //btn Upのクリックイベントで初期化
+  clr.addEventListener('click', uploadCanvasImage());
+
+  </script>
+</body>
+</html>
